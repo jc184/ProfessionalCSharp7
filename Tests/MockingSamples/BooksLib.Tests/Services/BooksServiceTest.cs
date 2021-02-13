@@ -1,11 +1,13 @@
-﻿using BooksLib.Models;
-using BooksLib.Repositories;
-using Moq;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using BooksLib.Models;
+using BooksLib.Repositories;
+using BooksLib.Services;
+using Moq;
 using Xunit;
 
-namespace BooksLib.Services
+namespace BooksLib.Tests.Services
 {
     public class BooksServiceTest : IDisposable
     {
@@ -46,6 +48,20 @@ namespace BooksLib.Services
             mock.Setup(repository => repository.UpdateAsync(_updatedBook)).ReturnsAsync(_updatedBook);
 
             _booksService = new BooksService(mock.Object);
+        }
+
+        [Fact]
+        public async Task LoadBooks_ReturnsExistingBooks()
+        {
+            var mock = new Mock<IBooksRepository>();
+            IEnumerable<Book> value = new List<Book>();
+            mock.Setup(repository => repository.GetItemsAsync()).ReturnsAsync(value);
+            // arrange
+            var result = await _booksService.LoadBooksAsync();
+            // act
+            
+            // assert
+            Assert.IsType<Book[]>(result);
         }
 
         [Fact]

@@ -8,7 +8,7 @@ namespace BooksLib.Services
     {
         Task<Book> AddOrUpdateBookAsync(Book book);
         Book GetBook(int bookId);
-        Task LoadBooksAsync();
+        Task<IEnumerable<Book>> LoadBooksAsync();
 
         IEnumerable<Book> Books { get; }
     }

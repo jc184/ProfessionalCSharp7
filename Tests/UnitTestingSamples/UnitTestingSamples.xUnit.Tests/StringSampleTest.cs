@@ -20,6 +20,9 @@ namespace UnitTestingSamples.xUnit.Tests
             Assert.Throws<ArgumentNullException>(() => sample.GetStringDemo("a", null));
             Assert.Throws<ArgumentException>(() =>
             sample.GetStringDemo(string.Empty, "a"));
+            const string first = "a";
+            const string second = "bb";
+            Assert.Throws<ArgumentOutOfRangeException>(() => sample.GetStringDemo(first, second));
         }
 
         [Fact]

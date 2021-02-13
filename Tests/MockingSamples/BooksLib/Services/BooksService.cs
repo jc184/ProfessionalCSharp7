@@ -17,9 +17,9 @@ namespace BooksLib.Services
             _booksRepository = repository;
         }
 
-        public async Task LoadBooksAsync()
+        public async Task<IEnumerable<Book>> LoadBooksAsync()
         {
-            if (_books.Count > 0) return;
+            if (_books.Count > 0) return _books;
 
             IEnumerable<Book> books = await _booksRepository.GetItemsAsync();
             _books.Clear();
@@ -27,10 +27,12 @@ namespace BooksLib.Services
             {
                 _books.Add(b);
             }
+
+            return books;
         }
 
         public Book GetBook(int bookId) =>
-            _books.Where(b => b.BookId == bookId).SingleOrDefault();
+            _books.SingleOrDefault(b => b.BookId == bookId);
 
         public async Task<Book> AddOrUpdateBookAsync(Book book)
         {
@@ -47,7 +49,7 @@ namespace BooksLib.Services
                 updated = await _booksRepository.UpdateAsync(book);
                 if (updated == null) throw new InvalidOperationException();
 
-                Book old = _books.Where(b => b.BookId == updated.BookId).Single();
+                Book old = _books.Single(b => b.BookId == updated.BookId);
                 int ix = _books.IndexOf(old);
                 _books.RemoveAt(ix);
                 _books.Insert(ix, updated);
